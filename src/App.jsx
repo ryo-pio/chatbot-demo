@@ -2,6 +2,7 @@ import React from 'react';
 import defaultDataset from "./dataset";
 import './assets/styles/style.css';
 import {AnswersList, Chats} from './components/index';
+import FormDialog from './components/forms/FormDialog';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -14,6 +15,8 @@ export default class App extends React.Component {
       open: false
     }
     this.selectAnswer = this.selectAnswer.bind(this);
+    this.handleClose = this.handleClose.bind(this); // bind practice#6
+    this.handleClickOpen = this.handleClickOpen.bind(this); // bind practice#6
   }
 
   displayNextQuestion = (nextQuestionId) => {
@@ -42,6 +45,9 @@ export default class App extends React.Component {
         a.target = "_blank";
         a.click(); // 強制クリックでページを開く
         break;
+      case ( nextQuestionId === "contact"):
+        this.handleClickOpen();
+        break;
       default:
         const chats = this.state.chats;
         chats.push({
@@ -66,6 +72,14 @@ export default class App extends React.Component {
     })
   }
 
+  handleClickOpen = () => {
+    this.setState({open: true});
+  };
+
+  handleClose = () => {
+    this.setState({open: false});
+  };
+
   componentDidMount() {
     const initAnswer = "";
     this.selectAnswer(initAnswer, this.state.currentId)
@@ -84,6 +98,7 @@ export default class App extends React.Component {
         <div className="c-box">
           <Chats chats={this.state.chats} />
           <AnswersList answers={this.state.answers} select={this.selectAnswer} />
+          <FormDialog open={this.state.open} handleClose={this.handleClose} />
         </div>
       </section>
     );
