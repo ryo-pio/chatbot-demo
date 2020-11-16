@@ -33,7 +33,14 @@ export default class App extends React.Component {
   selectAnswer = (selectedAnswer, nextQuestionId) => {
     switch(true) {
       case (nextQuestionId === "init"):
-        this.displayNextQuestion(nextQuestionId);
+        setTimeout(() => this.displayNextQuestion(nextQuestionId), 500); // 応答の遅延実行
+        // this.displayNextQuestion(nextQuestionId);
+        break;
+      case (/^https:*/.test(nextQuestionId)): //正規表現からurlかどうかを判定
+        const a = document.createElement('a'); // aタグを生成する
+        a.href = nextQuestionId;
+        a.target = "_blank";
+        a.click(); // 強制クリックでページを開く
         break;
       default:
         const chats = this.state.chats;
@@ -45,8 +52,8 @@ export default class App extends React.Component {
         this.setState({
           chats: chats
         })
-
-        this.displayNextQuestion(nextQuestionId);
+        setTimeout(() => this.displayNextQuestion(nextQuestionId), 500); // 応答の遅延実行
+        // this.displayNextQuestion(nextQuestionId);
         break;
     }
   }
@@ -62,6 +69,13 @@ export default class App extends React.Component {
   componentDidMount() {
     const initAnswer = "";
     this.selectAnswer(initAnswer, this.state.currentId)
+  }
+
+  componentDidUpdate(){
+    const scrollArea = document.getElementById("scroll-area");
+    if(scrollArea) {
+      scrollArea.scrollTop = scrollArea.scrollHeight // 自動スクロール
+    }
   }
 
   render() {
